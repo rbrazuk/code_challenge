@@ -1,16 +1,13 @@
 package com.example.android.codechallenge;
 
-import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
 import butterknife.BindView;
-import butterknife.BindViews;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
@@ -49,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemSelected(R.id.sp_name_format)
-    public void onNameFormatSelected(Spinner spinner, int position) {
+    public void onNameFormatSelected(int position) {
         switch (position) {
             case 0:
                 isDefaultNameFormat = true;
