@@ -1,7 +1,9 @@
 package com.example.android.codechallenge;
 
+import android.support.annotation.IdRes;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
@@ -22,6 +24,7 @@ public class MainActivity extends AppCompatActivity {
 
     private String mFirstName = "";
     private String mLastName = "";
+    private boolean isDefaultNameFormat = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,8 +49,19 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @OnItemSelected(R.id.sp_name_format)
-    public void onNameFormatSelected(int position) {
-
+    public void onNameFormatSelected(Spinner spinner, int position) {
+        switch (position) {
+            case 0:
+                isDefaultNameFormat = true;
+                populateNameField();
+                break;
+            case 1:
+                isDefaultNameFormat = false;
+                populateNameField();
+                break;
+            default:
+                break;
+        }
     }
 
     public void setUpSpinner(Spinner spinner) {
@@ -63,7 +77,11 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateNameField() {
-        tvName.setText(String.format(getResources().getString(R.string.name_format_first_last), mFirstName, mLastName));
+        if (isDefaultNameFormat) {
+            tvName.setText(String.format(getResources().getString(R.string.name_format_first_last), mFirstName, mLastName));
+        } else {
+            tvName.setText(String.format(getResources().getString(R.string.name_format_last_first), mFirstName, mLastName));
+        }
     }
 
 }
