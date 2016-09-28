@@ -30,4 +30,9 @@ public class MainActivity extends AppCompatActivity {
         tvFirstName.setText(etFirstName.getText().toString());
     }
 
+    @OnTextChanged(R.id.et_last_name)
+    public void onLastNameTextChanged() {
+        tvLastName.setText(etLastName.getText().toString());
+    }
+
 }
