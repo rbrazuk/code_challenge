@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="name_formats">
+        <item>First Name, Last Name</item>
+        <item>Last Name, First Name</item>
+    </string-array>
+</resources>
