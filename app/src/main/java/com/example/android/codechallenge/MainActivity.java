@@ -10,6 +10,7 @@ import android.widget.TextView;
 import butterknife.BindView;
 import butterknife.BindViews;
 import butterknife.ButterKnife;
+import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
 
 public class MainActivity extends AppCompatActivity {
@@ -44,6 +45,11 @@ public class MainActivity extends AppCompatActivity {
         populateNameField();
     }
 
+    @OnItemSelected(R.id.sp_name_format)
+    public void onNameFormatSelected(int position) {
+
+    }
+
     public void setUpSpinner(Spinner spinner) {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this,
@@ -57,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void populateNameField() {
-        tvName.setText(String.format("%s %s",mFirstName,mLastName));
+        tvName.setText(String.format(getResources().getString(R.string.name_format_first_last), mFirstName, mLastName));
     }
 
 }

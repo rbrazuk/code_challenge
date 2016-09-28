@@ -4,4 +4,6 @@
     <!-- MainActivity -->
     <string name="first_name_hint">First Name</string>
     <string name="last_name_hint">Last Name</string>
+    <string name="name_format_first_last">%1$s %2$s</string>
+    <string name="name_format_last_first">%2$s, %1$s</string>
 </resources>
