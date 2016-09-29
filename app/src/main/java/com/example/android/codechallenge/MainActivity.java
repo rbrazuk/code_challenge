@@ -31,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setUpSpinner(spNameFormat);
+
+
     }
 
     @OnTextChanged(R.id.et_first_name)
