@@ -2,12 +2,21 @@ package com.example.android.codechallenge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
+import com.google.gson.Gson;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -31,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private String mFirstName = "";
     private String mLastName = "";
     private boolean isDefaultNameFormat = true;
+    private String json;
 
     private final OkHttpClient client = new OkHttpClient();
 
@@ -49,6 +59,8 @@ public class MainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
+        System.out.println(json);
+
     }
 
     public void run() throws Exception {
@@ -66,9 +78,39 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-                System.out.println(response.body().string());
+
+                json = response.body().string();
+
+                try {
+                    ArrayList<Person> list = getPeopleList(json);
+                    for (Person person : list) {
+                        System.out.println(person.getFirstName());
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+
             }
         });
+    }
+
+    public ArrayList<Person> getPeopleList(String json) throws JSONException {
+
+        List<Person> peopleList = new ArrayList<>();
+        JSONObject obj = new JSONObject(json);
+        JSONArray people = obj.getJSONArray("people");
+
+        for (int i = 0; i < people.length(); i++) {
+            JSONObject personJson = (JSONObject) people.get(i);
+
+            String firstName = personJson.getString("first_name");
+            String lastName = personJson.getString("last_name");
+
+            Person newPerson = new Person(firstName, lastName);
+            peopleList.add(newPerson);
+        }
+
+        return (ArrayList<Person>) peopleList;
     }
 
     public void setUpSpinner(Spinner spinner) {
@@ -118,7 +160,4 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
     }
-
-
-
 }
