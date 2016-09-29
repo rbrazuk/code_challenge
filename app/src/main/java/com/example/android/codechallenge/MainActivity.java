@@ -32,14 +32,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.tv_name) TextView tvName;
     @BindView(R.id.sp_name_format) Spinner spNameFormat;
 
-    private final String PEOPLE_ENDPOINT = "https://gist.githubusercontent.com/joxenford/c49932a9ce74007e49b466cae8886fec/raw/8a999d3011cc000dec989538951c370c4bcfce5c/people.json";
+
 
     private String mFirstName = "";
     private String mLastName = "";
     private boolean isDefaultNameFormat = true;
-    private String json;
 
-    private final OkHttpClient client = new OkHttpClient();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,58 +48,8 @@ public class MainActivity extends AppCompatActivity {
 
         setUpSpinner(spNameFormat);
 
-        try {
-            getPeopleJson(PEOPLE_ENDPOINT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-
-        System.out.println(json);
-
-    }
-
-    public void getPeopleJson(String endpoint) throws Exception {
-        Request request = new Request.Builder()
-            .url(endpoint)
-            .build();
-
-        client.newCall(request).enqueue(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                e.printStackTrace();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                json = response.body().string();
-
-                try {
-                    ArrayList<Person> peopleList = getPeopleListFromJson(json);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
 
 
-            }
-        });
-    }
-
-    public ArrayList<Person> getPeopleListFromJson(String json) throws JSONException {
-
-        List<Person> peopleList = new ArrayList<>();
-        JSONObject obj = new JSONObject(json);
-        JSONArray people = obj.getJSONArray("people");
-
-        for (int i = 0; i < people.length(); i++) {
-            JSONObject personJson = (JSONObject) people.get(i);
-
-            Person newPerson = new Person(personJson.getString("first_name"), personJson.getString("last_name"));
-            peopleList.add(newPerson);
-        }
-
-        return (ArrayList<Person>) peopleList;
     }
 
     public void setUpSpinner(Spinner spinner) {
