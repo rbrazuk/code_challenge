@@ -2,13 +2,10 @@ package com.example.android.codechallenge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
-
-import com.google.gson.Gson;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -54,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
         setUpSpinner(spNameFormat);
 
         try {
-            run();
+            getPeopleJson(PEOPLE_ENDPOINT);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -63,9 +60,9 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void run() throws Exception {
+    public void getPeopleJson(String endpoint) throws Exception {
         Request request = new Request.Builder()
-            .url(PEOPLE_ENDPOINT)
+            .url(endpoint)
             .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -78,23 +75,20 @@ public class MainActivity extends AppCompatActivity {
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
 
-
                 json = response.body().string();
 
                 try {
-                    ArrayList<Person> list = getPeopleList(json);
-                    for (Person person : list) {
-                        System.out.println(person.getFirstName());
-                    }
+                    ArrayList<Person> peopleList = getPeopleListFromJson(json);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+
 
             }
         });
     }
 
-    public ArrayList<Person> getPeopleList(String json) throws JSONException {
+    public ArrayList<Person> getPeopleListFromJson(String json) throws JSONException {
 
         List<Person> peopleList = new ArrayList<>();
         JSONObject obj = new JSONObject(json);
@@ -103,10 +97,7 @@ public class MainActivity extends AppCompatActivity {
         for (int i = 0; i < people.length(); i++) {
             JSONObject personJson = (JSONObject) people.get(i);
 
-            String firstName = personJson.getString("first_name");
-            String lastName = personJson.getString("last_name");
-
-            Person newPerson = new Person(firstName, lastName);
+            Person newPerson = new Person(personJson.getString("first_name"), personJson.getString("last_name"));
             peopleList.add(newPerson);
         }
 
