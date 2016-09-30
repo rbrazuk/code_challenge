@@ -54,6 +54,7 @@ public class PeopleAdapter extends RecyclerView.Adapter<PeopleAdapter.ViewHolder
     public void onBindViewHolder(PeopleAdapter.ViewHolder holder, int position) {
         Person person = mPeopleList.get(position);
         TextView mNameTextView = holder.tvName;
+
         mNameTextView.setText(person.getFirstName() + " " + person.getLastName());
     }
 

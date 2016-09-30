@@ -4,7 +4,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -36,13 +35,10 @@ public class PeopleListActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
-
-        getJsonString();
-
-
+        populateViews();
     }
 
-    public void getJsonString() {
+    public void populateViews() {
         Request request = new Request.Builder()
                 .url(PEOPLE_ENDPOINT)
                 .build();
@@ -69,7 +65,6 @@ public class PeopleListActivity extends AppCompatActivity {
                 }
             }
         });
-
     }
 
     private void setUpRecyclerView(List<Person> list) {
