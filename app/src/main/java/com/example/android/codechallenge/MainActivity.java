@@ -7,23 +7,11 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
-
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnItemSelected;
 import butterknife.OnTextChanged;
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
+
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,8 +19,6 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.et_last_name) EditText etLastName;
     @BindView(R.id.tv_name) TextView tvName;
     @BindView(R.id.sp_name_format) Spinner spNameFormat;
-
-
 
     private String mFirstName = "";
     private String mLastName = "";
@@ -47,9 +33,6 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         setUpSpinner(spNameFormat);
-
-
-
     }
 
     public void setUpSpinner(Spinner spinner) {

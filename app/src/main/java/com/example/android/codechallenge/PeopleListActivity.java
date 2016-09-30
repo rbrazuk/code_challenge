@@ -2,6 +2,9 @@ package com.example.android.codechallenge;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -11,6 +14,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindView;
+import butterknife.ButterKnife;
 import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.OkHttpClient;
@@ -19,28 +24,27 @@ import okhttp3.Response;
 
 public class PeopleListActivity extends AppCompatActivity {
 
-    private final String PEOPLE_ENDPOINT = "https://gist.githubusercontent.com/joxenford/c49932a9ce74007e49b466cae8886fec/raw/8a999d3011cc000dec989538951c370c4bcfce5c/people.json";
-    private String json;
+    @BindView(R.id.rv_people) RecyclerView rvPeople;
 
-    private final OkHttpClient client = new OkHttpClient();
+    private static OkHttpClient client = new OkHttpClient();
+    private final String PEOPLE_ENDPOINT = "https://gist.githubusercontent.com/joxenford/c49932a9ce74007e49b466cae8886fec/raw/8a999d3011cc000dec989538951c370c4bcfce5c/people.json";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_people_list);
 
-        try {
-            getPeopleJson(PEOPLE_ENDPOINT);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        ButterKnife.bind(this);
 
-        System.out.println(json);
+
+        getJsonString();
+
+
     }
 
-    public void getPeopleJson(String endpoint) throws Exception {
+    public void getJsonString() {
         Request request = new Request.Builder()
-                .url(endpoint)
+                .url(PEOPLE_ENDPOINT)
                 .build();
 
         client.newCall(request).enqueue(new Callback() {
@@ -52,28 +56,35 @@ public class PeopleListActivity extends AppCompatActivity {
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 if (!response.isSuccessful()) throw new IOException("Unexpected code " + response);
-
-                json = response.body().string();
+                String json = response.body().string();
 
                 try {
-                    ArrayList<Person> peopleList = getPeopleListFromJson(json);
+                    List<Person> peopleList = getPeopleList(json);
+                    if (peopleList != null || !peopleList.isEmpty()) {
+                        setUpRecyclerView(peopleList);
+                    }
+
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-
-
             }
         });
+
     }
 
-    public ArrayList<Person> getPeopleListFromJson(String json) throws JSONException {
+    private void setUpRecyclerView(List<Person> list) {
+        PeopleAdapter adapter = new PeopleAdapter(this, list);
+        rvPeople.setAdapter(adapter);
+        rvPeople.setLayoutManager(new LinearLayoutManager(this));
+    }
 
+    public static ArrayList<Person> getPeopleList(String json) throws JSONException {
         List<Person> peopleList = new ArrayList<>();
-        JSONObject obj = new JSONObject(json);
-        JSONArray people = obj.getJSONArray("people");
+        JSONObject obj =new JSONObject(json);
+        JSONArray peopleJsonArray = obj.getJSONArray("people");
 
-        for (int i = 0; i < people.length(); i++) {
-            JSONObject personJson = (JSONObject) people.get(i);
+        for (int i = 0; i < peopleJsonArray.length(); i++) {
+            JSONObject personJson = (JSONObject) peopleJsonArray.get(i);
 
             Person newPerson = new Person(personJson.getString("first_name"), personJson.getString("last_name"));
             peopleList.add(newPerson);
@@ -81,4 +92,7 @@ public class PeopleListActivity extends AppCompatActivity {
 
         return (ArrayList<Person>) peopleList;
     }
+
+
+
 }
